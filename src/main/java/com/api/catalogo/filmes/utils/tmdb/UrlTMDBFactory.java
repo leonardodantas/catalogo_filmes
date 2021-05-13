@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ApiTMDB {
+public class UrlTMDBFactory {
 
     @Value("${api.key}")
     private String apiKey;
@@ -20,8 +20,8 @@ public class ApiTMDB {
         return urlMovie;
     }
 
-    public String criarUrlMovie(RequestMovie requestMovie){
-        return urlMovie + requestMovie.getTypeRequest() + "?api_key=" + apiKey;
+    public String criarUrlParaBuscarTiposDeFilmes(RequestMovie requestMovie, int page){
+        return urlMovie + requestMovie.getTypeRequest() + "?api_key=" + apiKey + "&page=" + page;
     }
 
 }
