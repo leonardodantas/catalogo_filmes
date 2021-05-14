@@ -2,6 +2,7 @@ package com.api.catalogo.filmes.controllers;
 
 import com.api.catalogo.filmes.models.PaginacaoFilmesDTO;
 import com.api.catalogo.filmes.services.FilmesTMDBService;
+import com.api.catalogo.filmes.utils.exception.ErrorResponse;
 import com.api.catalogo.filmes.utils.tmdb.RequestMovie;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class FilmesTMDBController {
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginacaoFilmesDTO.class),
             @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
-            @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Pagina deve ser igual ou menor que 500"),
+            @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Pagina deve ser igual ou menor que 500", response = ErrorResponse.class),
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
     })
     public ResponseEntity<?> recuperarFilmesTMDB(
