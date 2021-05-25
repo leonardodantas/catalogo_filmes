@@ -12,16 +12,11 @@ public class UrlTMDBFactory {
     @Value("${url.movie}")
     private String urlMovie;
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getUrlMovie() {
-        return urlMovie;
-    }
-
     public String criarUrlParaBuscarTiposDeFilmes(RequestMovie requestMovie, int page){
-        return urlMovie + requestMovie.getTypeRequest() + "?api_key=" + apiKey + "&page=" + page;
+        return urlMovie + requestMovie.getTypeRequest() + "?api_key=" + apiKey + "&page=" + page + "&language=pt-BR";
     }
 
+    public String criarUrlParaBuscarDetalhesDoFilmes(int movieId){
+        return urlMovie + movieId + "?api_key=" + apiKey + "&language=pt-BR";
+    }
 }
