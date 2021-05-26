@@ -1,9 +1,9 @@
 package com.api.catalogo.filmes.utils.constantes;
 
-public class FilmesTMDBConstante {
+public class MoviesTMDBConstants {
 
 
-    private FilmesTMDBConstante(){
+    private MoviesTMDBConstants(){
 
     }
 
