@@ -1,8 +1,11 @@
 package com.api.catalogo.filmes.controllers;
 
-import com.api.catalogo.filmes.models.MovieDetailDTO;
-import com.api.catalogo.filmes.models.PaginationMoviesDTO;
+import com.api.catalogo.filmes.models.details.MovieDetailDTO;
+import com.api.catalogo.filmes.models.movie.MovieDTO;
+import com.api.catalogo.filmes.models.pagination.PaginationDTO;
 import com.api.catalogo.filmes.models.keyword.Keywords;
+import com.api.catalogo.filmes.models.review.ReviewDTO;
+import com.api.catalogo.filmes.models.video.Video;
 import com.api.catalogo.filmes.services.MoviesTMDBService;
 import com.api.catalogo.filmes.utils.exception.ErrorResponse;
 import com.api.catalogo.filmes.utils.tmdb.RequestMovie;
@@ -26,7 +29,7 @@ public class MoviesTMDBController {
     @GetMapping
     @ApiOperation(tags = "Serviço de acesso a API do TMDB", value = "Utilizada as informação inseridas como RequestMovie e Page para acessar a API do TMDB e recuperar uma lista de files")
     @ApiResponses(value = {
-            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationMoviesDTO.class),
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
             @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
             @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Pagina deve ser igual ou menor que 500", response = ErrorResponse.class),
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
@@ -36,11 +39,11 @@ public class MoviesTMDBController {
             @RequestParam(value = "requestMovie") RequestMovie requestMovie,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
             @RequestParam(value = "page") int page){
-        PaginationMoviesDTO paginationMoviesDTO = moviesTMDBService.searchAllMoviesByCategory(requestMovie, page);
-        if(Objects.isNull(paginationMoviesDTO.getResultados())){
+        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.searchAllMoviesByCategory(requestMovie, page);
+        if(Objects.isNull(paginationDTO.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(paginationMoviesDTO, HttpStatus.OK);
+        return new ResponseEntity<>(paginationDTO, HttpStatus.OK);
     }
 
     @GetMapping("details")
@@ -86,21 +89,62 @@ public class MoviesTMDBController {
     @ApiOperation(tags = "Serviço de acesso a API do TMDB",
             value = "Usa um MOVIEID para listar os filmes similares")
     @ApiResponses(value = {
-            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationMoviesDTO.class),
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
             @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
             @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Palavra chave não encontrada"),
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
     })
     public ResponseEntity<?> listSimilarMovies(
             @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
-            @RequestParam(value = "movie") int idFilme,
+            @RequestParam(value = "movie") int movie,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
             @RequestParam(value = "page") int page){
-        PaginationMoviesDTO paginationMoviesDTO = moviesTMDBService.listSimilarMovies(idFilme, page);
-        if(Objects.isNull(paginationMoviesDTO.getResultados())){
+        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.listSimilarMovies(movie, page);
+        if(Objects.isNull(paginationDTO.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(paginationMoviesDTO, HttpStatus.OK);
+        return new ResponseEntity<>(paginationDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("review")
+    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+            value = "Usa um MOVIEID para mostrar as reviews de um filme")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
+            @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
+            @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Palavra chave não encontrada"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
+    })
+    public ResponseEntity<?> reviewsMovie(
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
+            @RequestParam(value = "movie") int movie,
+            @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
+            @RequestParam(value = "page") int page){
+        PaginationDTO<ReviewDTO> paginationDTO = moviesTMDBService.reviewsMovie(movie, page);
+        if(Objects.isNull(paginationDTO.getResultados())){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(paginationDTO, HttpStatus.OK);
+    }
+
+
+    @GetMapping("videos")
+    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+            value = "Usa um MOVIEID para mostrar os videos de um filme")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
+            @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
+            @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Palavra chave não encontrada"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
+    })
+    public ResponseEntity<?> videosOfMovie(
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
+            @RequestParam(value = "movie") int movie){
+        Video video = moviesTMDBService.videosOfMovie(movie);
+        if(Objects.isNull(video)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(video, HttpStatus.OK);
     }
 
 

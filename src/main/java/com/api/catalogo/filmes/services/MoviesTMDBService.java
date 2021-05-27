@@ -1,13 +1,18 @@
 package com.api.catalogo.filmes.services;
 
-import com.api.catalogo.filmes.models.MovieDetailDTO;
-import com.api.catalogo.filmes.models.PaginationMoviesDTO;
+import com.api.catalogo.filmes.models.details.MovieDetailDTO;
+import com.api.catalogo.filmes.models.movie.MovieDTO;
+import com.api.catalogo.filmes.models.pagination.PaginationDTO;
 import com.api.catalogo.filmes.models.keyword.Keywords;
+import com.api.catalogo.filmes.models.review.ReviewDTO;
+import com.api.catalogo.filmes.models.video.Video;
 import com.api.catalogo.filmes.utils.constantes.ServerConstante;
 import com.api.catalogo.filmes.utils.exception.TreatmentHttpStatusException;
 import com.api.catalogo.filmes.utils.tmdb.RequestMovie;
 import com.api.catalogo.filmes.utils.tmdb.UrlTMDBFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,19 +34,20 @@ public class MoviesTMDBService {
     @Autowired
     private TreatmentHttpStatusException treatmentHttpStatus;
 
-    public PaginationMoviesDTO searchAllMoviesByCategory(RequestMovie requestMovie, int page){
+    public PaginationDTO<MovieDTO> searchAllMoviesByCategory(RequestMovie requestMovie, int page){
         String url = urlTMDBFactory.createURLForSearhMoviePerType(requestMovie, page);
-        ResponseEntity<PaginationMoviesDTO> movies = searchAllMoviesByCategoryTMDB(url);
+        ResponseEntity<PaginationDTO<MovieDTO>> movies = searchAllMoviesByCategoryTMDB(url);
         if(movies.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(movies.getBody().getResultados())){
             return movies.getBody();
         }
-        return new PaginationMoviesDTO();
+        return new PaginationDTO();
     }
 
-    private ResponseEntity<PaginationMoviesDTO> searchAllMoviesByCategoryTMDB(String url){
-        ResponseEntity<PaginationMoviesDTO> movies;
+    private ResponseEntity<PaginationDTO<MovieDTO>> searchAllMoviesByCategoryTMDB(String url){
+        ResponseEntity<PaginationDTO<MovieDTO>> movies;
         try {
-            movies = restTemplate.getForEntity(url, PaginationMoviesDTO.class);
+            ParameterizedTypeReference<PaginationDTO<MovieDTO>> typeRef = new ParameterizedTypeReference<PaginationDTO<MovieDTO>>() {};
+            movies = restTemplate.exchange(url, HttpMethod.GET,  null, typeRef);
         } catch (HttpClientErrorException error){
             treatmentHttpStatus.handlerHttpStatusException(error);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
@@ -63,6 +69,7 @@ public class MoviesTMDBService {
         try {
             detailsMovie = restTemplate.getForEntity(url, MovieDetailDTO.class);
         } catch (HttpClientErrorException error) {
+            treatmentHttpStatus.handlerHttpStatusException(error);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
         }
         return detailsMovie;
@@ -82,27 +89,75 @@ public class MoviesTMDBService {
         try {
             keywords = restTemplate.getForEntity(url, Keywords.class);
         } catch (HttpClientErrorException error) {
+            treatmentHttpStatus.handlerHttpStatusException(error);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
         }
         return keywords;
     }
 
-    public PaginationMoviesDTO listSimilarMovies(int movie, int page) {
+    public PaginationDTO<MovieDTO> listSimilarMovies(int movie, int page) {
         String url = urlTMDBFactory.createURLForListSimilarMovies(movie, page);
-        ResponseEntity<PaginationMoviesDTO> moviesResponse = listSimilarMoviesTMDB(url);
+        ResponseEntity<PaginationDTO<MovieDTO>> moviesResponse = listSimilarMoviesTMDB(url);
         if(moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResultados())){
             return moviesResponse.getBody();
         }
-        return new PaginationMoviesDTO();
+        return new PaginationDTO();
     }
 
-    private ResponseEntity<PaginationMoviesDTO> listSimilarMoviesTMDB(String url) {
-        ResponseEntity<PaginationMoviesDTO> movies;
+    private ResponseEntity<PaginationDTO<MovieDTO>> listSimilarMoviesTMDB(String url) {
+        ResponseEntity<PaginationDTO<MovieDTO>> movies;
         try {
-            movies = restTemplate.getForEntity(url, PaginationMoviesDTO.class);
+            ParameterizedTypeReference<PaginationDTO<MovieDTO>> typeRef = new ParameterizedTypeReference<PaginationDTO<MovieDTO>>() {};
+            movies = restTemplate.exchange(url, HttpMethod.GET, null, typeRef);
         } catch (HttpClientErrorException error){
+            treatmentHttpStatus.handlerHttpStatusException(error);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
         }
         return movies;
+    }
+
+    public PaginationDTO<ReviewDTO> reviewsMovie(int movie, int page) {
+        String url = urlTMDBFactory.createURLForReviewMovie(movie, page);
+        ResponseEntity<PaginationDTO<ReviewDTO>> moviesResponse = reviewsMovieTMDB(url);
+        if(moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResultados())){
+            return moviesResponse.getBody();
+        }
+        return new PaginationDTO();
+    }
+
+    private ResponseEntity<PaginationDTO<ReviewDTO>> reviewsMovieTMDB(String url) {
+        ResponseEntity<PaginationDTO<ReviewDTO>> movies;
+        try {
+            ParameterizedTypeReference<PaginationDTO<ReviewDTO>> typeRef = new ParameterizedTypeReference<PaginationDTO<ReviewDTO>>() {};
+            movies = restTemplate.exchange(url, HttpMethod.GET, null, typeRef);
+        } catch (HttpClientErrorException error){
+            treatmentHttpStatus.handlerHttpStatusException(error);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
+        }
+        return movies;
+    }
+
+    public Video videosOfMovie(int movie) {
+        String url = urlTMDBFactory.createURLForVideosMovie(movie);
+        ResponseEntity<Video> videos = videosOfMovieTMDB(url);
+        if(videos.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(videos.getBody())){
+            videos.getBody().getResults()
+                    .stream()
+                    .filter(video -> video.getSite().equals("YouTube"))
+                    .forEach(video -> video.setUrlYoutube("https://www.youtube.com/watch?v=" + video.getKey()));
+            return videos.getBody();
+        }
+        return new Video();
+    }
+
+    private ResponseEntity<Video> videosOfMovieTMDB(String url) {
+        ResponseEntity<Video> videoResponse;
+        try {
+            videoResponse = restTemplate.getForEntity(url, Video.class);
+        } catch (HttpClientErrorException error){
+            treatmentHttpStatus.handlerHttpStatusException(error);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
+        }
+        return videoResponse;
     }
 }

@@ -1,4 +1,4 @@
-package com.api.catalogo.filmes.models;
+package com.api.catalogo.filmes.models.pagination;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -6,13 +6,13 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class PaginationMoviesDTO {
+public class PaginationDTO<T extends IPagination> {
 
     @JsonProperty(value = "page")
     private int pagina;
 
     @JsonProperty(value = "results")
-    private List<FilmesDTO> resultados;
+    private List<T> resultados;
 
     @JsonProperty(value = "total_pages")
     private int totalDePaginas;

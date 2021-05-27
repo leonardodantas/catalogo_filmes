@@ -1,10 +1,11 @@
-package com.api.catalogo.filmes.models;
+package com.api.catalogo.filmes.models.movie;
 
+import com.api.catalogo.filmes.models.pagination.IPagination;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class FilmesDTO {
+public class MovieDTO implements IPagination {
 
     @JsonProperty(value = "id")
     private int id;

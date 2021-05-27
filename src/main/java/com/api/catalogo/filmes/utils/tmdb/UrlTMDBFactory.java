@@ -27,4 +27,12 @@ public class UrlTMDBFactory {
     public String createURLForListSimilarMovies(int movie, int page) {
         return urlMovie + movie + "/similar" + "?api_key=" + apiKey + "&page=" + page + "&language=pt-BR";
     }
+
+    public String createURLForReviewMovie(int movie, int page) {
+        return urlMovie + movie + "/reviews" + "?api_key=" + apiKey + "&page=" + page;
+    }
+
+    public String createURLForVideosMovie(int movie) {
+        return urlMovie + movie + "/videos" + "?api_key=" + apiKey + "&language=pt-BR";
+    }
 }

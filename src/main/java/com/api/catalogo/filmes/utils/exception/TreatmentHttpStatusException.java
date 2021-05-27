@@ -23,9 +23,6 @@ public class TreatmentHttpStatusException {
         if(Objects.requireNonNull(error.getMessage()).contains(MoviesTMDBConstants.ERROR_ID_NOT_FOUND_SERVER)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MoviesTMDBConstants.ERROR_ID_NOT_FOUND_RESPONSE);
         }
-        if(Objects.requireNonNull(error.getMessage()).contains(MoviesTMDBConstants.ERROR_PAGE_BIGGER_500_SERVER)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MoviesTMDBConstants.ERROR_PAGE_BIGGER_500_RESPONSE);
-        }
     }
 
 }

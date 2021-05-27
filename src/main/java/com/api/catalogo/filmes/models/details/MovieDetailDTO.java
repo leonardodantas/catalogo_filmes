@@ -1,4 +1,4 @@
-package com.api.catalogo.filmes.models;
+package com.api.catalogo.filmes.models.details;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class MovieDetailDTO {
     @JsonProperty("budget")
     private double despesas;
     @JsonProperty("genres")
-    private List<GenerosDetalhe> generos;
+    private List<GenderDetail> generos;
     @JsonProperty("homepage")
     private String paginaInicial;
     @JsonProperty("imdb_id")
@@ -35,9 +35,9 @@ public class MovieDetailDTO {
     @JsonProperty("poster_path")
     private String caminhoDoPoster;
     @JsonProperty("production_companies")
-    private List<CidadesDeProducao> cidadesDeProducoes;
+    private List<ProductionCities> cidadesDeProducoes;
     @JsonProperty("production_countries")
-    private List<PaisesDeProducao> paisesDeProducoes;
+    private List<ProductionCountries> paisesDeProducoes;
     @JsonProperty("release_date")
     private String dataDeLancamento;
     @JsonProperty("revenue")
@@ -45,7 +45,7 @@ public class MovieDetailDTO {
     @JsonProperty("runtime")
     private String duracao;
     @JsonProperty("spoken_languages")
-    private List<Idiomas> idiomas;
+    private List<Language> idiomas;
     @JsonProperty("status")
     private String status;
     @JsonProperty("tagline")
