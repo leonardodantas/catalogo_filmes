@@ -8,6 +8,7 @@ import com.api.catalogo.filmes.models.review.ReviewDTO;
 import com.api.catalogo.filmes.models.video.Video;
 import com.api.catalogo.filmes.services.MoviesTMDBService;
 import com.api.catalogo.filmes.utils.exception.ErrorResponse;
+import com.api.catalogo.filmes.utils.tmdb.Language;
 import com.api.catalogo.filmes.utils.tmdb.RequestMovie;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,11 @@ public class MoviesTMDBController {
             @ApiParam(required = true, value = "Tipo do Filme a ser enviado", name = "requestMovie")
             @RequestParam(value = "requestMovie") RequestMovie requestMovie,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
-            @RequestParam(value = "page") int page){
-        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.searchAllMoviesByCategory(requestMovie, page);
+            @RequestParam(value = "page") int page,
+            @ApiParam(required = true, value = "Idioma das requisições", name = "language")
+            @RequestParam(value = "language") Language language
+            ){
+        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.searchAllMoviesByCategory(requestMovie, page, language);
         if(Objects.isNull(paginationDTO.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -57,14 +61,15 @@ public class MoviesTMDBController {
     })
     public ResponseEntity<?> recuperarDetalheFilmeTMDB(
             @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
-            @RequestParam(value = "movie") int movie){
-        MovieDetailDTO movieDetailDTO = moviesTMDBService.searchMovieDetail(movie);
+            @RequestParam(value = "movie") int movie,
+            @ApiParam(required = true, value = "Idioma das requisições", name = "language")
+            @RequestParam(value = "language") Language language){
+        MovieDetailDTO movieDetailDTO = moviesTMDBService.searchMovieDetail(movie, language);
         if(Objects.isNull(movieDetailDTO)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(movieDetailDTO, HttpStatus.OK);
     }
-
 
     @GetMapping("keyword")
     @ApiOperation(tags = "Serviço de acesso a API do TMDB",
@@ -98,8 +103,10 @@ public class MoviesTMDBController {
             @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
             @RequestParam(value = "movie") int movie,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
-            @RequestParam(value = "page") int page){
-        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.listSimilarMovies(movie, page);
+            @RequestParam(value = "page") int page,
+            @ApiParam(required = true, value = "Idioma das requisições", name = "language")
+            @RequestParam(value = "language") Language language){
+        PaginationDTO<MovieDTO> paginationDTO = moviesTMDBService.listSimilarMovies(movie, page, language);
         if(Objects.isNull(paginationDTO.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -139,8 +146,10 @@ public class MoviesTMDBController {
     })
     public ResponseEntity<?> videosOfMovie(
             @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
-            @RequestParam(value = "movie") int movie){
-        Video video = moviesTMDBService.videosOfMovie(movie);
+            @RequestParam(value = "movie") int movie,
+            @ApiParam(required = true, value = "Idioma das requisições", name = "language")
+            @RequestParam(value = "language") Language language){
+        Video video = moviesTMDBService.videosOfMovie(movie, language);
         if(Objects.isNull(video)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -8,9 +8,11 @@ import com.api.catalogo.filmes.models.review.ReviewDTO;
 import com.api.catalogo.filmes.models.video.Video;
 import com.api.catalogo.filmes.utils.constantes.ServerConstante;
 import com.api.catalogo.filmes.utils.exception.TreatmentHttpStatusException;
+import com.api.catalogo.filmes.utils.tmdb.Language;
 import com.api.catalogo.filmes.utils.tmdb.RequestMovie;
 import com.api.catalogo.filmes.utils.tmdb.UrlTMDBFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,16 +33,33 @@ public class MoviesTMDBService {
     @Autowired
     private UrlTMDBFactory urlTMDBFactory;
 
+    @Value("${url.image.tmdb}")
+    private String urlImageTMDB;
+
+    @Value("${url.video.youtube}")
+    private String urlVideoYoutube;
+
     @Autowired
     private TreatmentHttpStatusException treatmentHttpStatus;
 
-    public PaginationDTO<MovieDTO> searchAllMoviesByCategory(RequestMovie requestMovie, int page){
-        String url = urlTMDBFactory.createURLForSearhMoviePerType(requestMovie, page);
+    public PaginationDTO<MovieDTO> searchAllMoviesByCategory(RequestMovie requestMovie, int page, Language language){
+        String url = urlTMDBFactory.createURLForSearhMoviePerType(requestMovie, page, language);
         ResponseEntity<PaginationDTO<MovieDTO>> movies = searchAllMoviesByCategoryTMDB(url);
         if(movies.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(movies.getBody().getResultados())){
-            return movies.getBody();
+            return createURLCompleteMovie(movies);
         }
         return new PaginationDTO();
+    }
+
+    private PaginationDTO<MovieDTO> createURLCompleteMovie(ResponseEntity<PaginationDTO<MovieDTO>> movies) {
+        PaginationDTO<MovieDTO> moviePageDTO = movies.getBody();
+        moviePageDTO
+                .getResultados()
+                .forEach(result -> {
+                    result.setCaminhoDaImagemDeFundo(urlImageTMDB + result.getCaminhoDaImagemDeFundo());
+                    result.setCaminhoDoPoster(urlImageTMDB + result.getCaminhoDoPoster());
+                });
+        return moviePageDTO;
     }
 
     private ResponseEntity<PaginationDTO<MovieDTO>> searchAllMoviesByCategoryTMDB(String url){
@@ -55,13 +74,24 @@ public class MoviesTMDBService {
         return movies;
     }
 
-    public MovieDetailDTO searchMovieDetail(int movie) {
-        String url = urlTMDBFactory.criarUrlParaBuscarDetalhesDoFilmes(movie);
+    public MovieDetailDTO searchMovieDetail(int movie, Language language) {
+        String url = urlTMDBFactory.criarUrlParaBuscarDetalhesDoFilmes(movie, language);
         ResponseEntity<MovieDetailDTO> movieDetaiResponse = searchDetailsTMDB(url);
         if(movieDetaiResponse.getStatusCode().equals(HttpStatus.OK)){
-            return Objects.requireNonNull(movieDetaiResponse.getBody());
+            if(!Objects.isNull(movieDetaiResponse.getBody())) {
+                return createURLCompleteMovieDetail(movieDetaiResponse);
+            }
         }
         return new MovieDetailDTO();
+    }
+
+    private MovieDetailDTO createURLCompleteMovieDetail(ResponseEntity<MovieDetailDTO> movieDetaiResponse) {
+        MovieDetailDTO movieDetailDTO = movieDetaiResponse.getBody();
+        movieDetailDTO.setCaminhoDoPoster(urlImageTMDB + movieDetailDTO.getCaminhoDoPoster());
+        movieDetailDTO.setCaminhoDaImagem(urlImageTMDB + movieDetailDTO.getCaminhoDaImagem());
+        movieDetailDTO.getCidadesDeProducoes()
+                .forEach(cidade -> cidade.setCaminhoDoLogo(urlImageTMDB + cidade.getCaminhoDoLogo()));
+        return movieDetailDTO;
     }
 
     private ResponseEntity<MovieDetailDTO> searchDetailsTMDB(String url){
@@ -95,11 +125,11 @@ public class MoviesTMDBService {
         return keywords;
     }
 
-    public PaginationDTO<MovieDTO> listSimilarMovies(int movie, int page) {
-        String url = urlTMDBFactory.createURLForListSimilarMovies(movie, page);
+    public PaginationDTO<MovieDTO> listSimilarMovies(int movie, int page, Language language) {
+        String url = urlTMDBFactory.createURLForListSimilarMovies(movie, page, language);
         ResponseEntity<PaginationDTO<MovieDTO>> moviesResponse = listSimilarMoviesTMDB(url);
         if(moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResultados())){
-            return moviesResponse.getBody();
+            return createURLCompleteMovie(moviesResponse);
         }
         return new PaginationDTO();
     }
@@ -137,14 +167,14 @@ public class MoviesTMDBService {
         return movies;
     }
 
-    public Video videosOfMovie(int movie) {
-        String url = urlTMDBFactory.createURLForVideosMovie(movie);
+    public Video videosOfMovie(int movie, Language language) {
+        String url = urlTMDBFactory.createURLForVideosMovie(movie, language);
         ResponseEntity<Video> videos = videosOfMovieTMDB(url);
         if(videos.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(videos.getBody())){
             videos.getBody().getResults()
                     .stream()
                     .filter(video -> video.getSite().equals("YouTube"))
-                    .forEach(video -> video.setUrlYoutube("https://www.youtube.com/watch?v=" + video.getKey()));
+                    .forEach(video -> video.setUrlYoutube(urlVideoYoutube + video.getKey()));
             return videos.getBody();
         }
         return new Video();

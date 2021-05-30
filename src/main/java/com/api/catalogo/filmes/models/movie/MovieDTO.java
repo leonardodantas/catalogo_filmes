@@ -2,6 +2,8 @@ package com.api.catalogo.filmes.models.movie;
 
 import com.api.catalogo.filmes.models.pagination.IPagination;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -12,6 +14,9 @@ public class MovieDTO implements IPagination {
     @JsonProperty(value = "adult")
     private boolean adulto;
     @JsonProperty(value = "backdrop_path")
+
+    @Getter
+    @Setter
     private String caminhoDaImagemDeFundo;
     @JsonProperty(value = "genre_ids")
     private List<Integer> idsDosGeneros;
@@ -25,6 +30,9 @@ public class MovieDTO implements IPagination {
     private String resumo;
     @JsonProperty(value = "popularity")
     private double populariedade;
+
+    @Getter
+    @Setter
     @JsonProperty(value = "poster_path")
     private String caminhoDoPoster;
     @JsonProperty(value = "release_date")
