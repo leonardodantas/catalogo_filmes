@@ -8,6 +8,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -22,13 +23,14 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.api.catalogo.filmes.controllers"))
                 .build()
+                .tags(new Tag("API - TMDB", ""))
                 .apiInfo(metaData());
     }
 
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("API de catalogo de Filmes")
-                .description("Catalogo de filmes com diversas funcionalidades")
+                .title("APP - CATALOGO FILMES TMDB")
+                .description("Serviço de acesso e encapsulamento de filmes da API TMDB")
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")

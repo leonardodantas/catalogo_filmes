@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.HttpURLConnection;
 import java.util.Objects;
 
-@Api(tags = "Serviço de acesso a API do TMDB")
+@Api(tags = "API - TMDB")
 @RestController
 @RequestMapping("/movies/tmdb")
 public class MoviesTMDBController {
@@ -28,7 +28,7 @@ public class MoviesTMDBController {
     private MoviesTMDBService moviesTMDBService;
 
     @GetMapping
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB", value = "Utilizada as informação inseridas como RequestMovie e Page para acessar a API do TMDB e recuperar uma lista de files")
+    @ApiOperation(tags = "API - TMDB", value = "Utilizada as informação inseridas como RequestMovie e Page para acessar a API do TMDB e recuperar uma lista de files")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
             @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
@@ -51,7 +51,7 @@ public class MoviesTMDBController {
     }
 
     @GetMapping("details")
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+    @ApiOperation(tags = "API - TMDB",
             value = "Utiliza um id de um filme valido para retornar detalhes sobre o mesmo")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = MovieDetailDTO.class),
@@ -72,7 +72,7 @@ public class MoviesTMDBController {
     }
 
     @GetMapping("keyword")
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+    @ApiOperation(tags = "API - TMDB",
             value = "Usa um MOVIEID para recuperar as palavras-chaves referentes ao filme")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = Keywords.class),
@@ -91,7 +91,7 @@ public class MoviesTMDBController {
     }
 
     @GetMapping("similar")
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+    @ApiOperation(tags = "API - TMDB",
             value = "Usa um MOVIEID para listar os filmes similares")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
@@ -114,7 +114,7 @@ public class MoviesTMDBController {
     }
 
     @GetMapping("review")
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+    @ApiOperation(tags = "API - TMDB",
             value = "Usa um MOVIEID para mostrar as reviews de um filme")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
@@ -136,7 +136,7 @@ public class MoviesTMDBController {
 
 
     @GetMapping("videos")
-    @ApiOperation(tags = "Serviço de acesso a API do TMDB",
+    @ApiOperation(tags = "API - TMDB",
             value = "Usa um MOVIEID para mostrar os videos de um filme")
     @ApiResponses(value = {
             @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
