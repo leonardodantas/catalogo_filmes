@@ -21,7 +21,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.api.catalogo.filmes.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.api.catalogo.filmes.infra"))
                 .build()
                 .tags(new Tag("API - TMDB", ""))
                 .apiInfo(metaData());
