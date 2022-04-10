@@ -1,6 +1,6 @@
 package com.api.catalogo.filmes.infra.controllers;
 
-import com.api.catalogo.filmes.app.services.MoviesTMDBService;
+import com.api.catalogo.filmes.app.usecases.IFindDetails;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.domain.models.details.MovieDetailDTO;
 import io.swagger.annotations.*;
@@ -19,10 +19,10 @@ import java.util.Objects;
 @RequestMapping("/movies/tmdb")
 public class FindMovieDetailsController {
 
-    private final MoviesTMDBService movieService;
+    private final IFindDetails findDetails;
 
-    public FindMovieDetailsController(MoviesTMDBService movieService) {
-        this.movieService = movieService;
+    public FindMovieDetailsController(IFindDetails findDetails) {
+        this.findDetails = findDetails;
     }
 
     @GetMapping("details")
@@ -39,7 +39,7 @@ public class FindMovieDetailsController {
             @RequestParam(value = "movie") int movie,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
             @RequestParam(value = "language") Language language){
-        MovieDetailDTO response = movieService.searchMovieDetail(movie, language);
+        MovieDetailDTO response = findDetails.execute(movie, language);
         if(Objects.isNull(response)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

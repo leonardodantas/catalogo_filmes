@@ -1,6 +1,7 @@
 package com.api.catalogo.filmes.infra.controllers;
 
-import com.api.catalogo.filmes.app.services.MoviesTMDBService;
+import com.api.catalogo.filmes.app.usecases.IFindMovieResources;
+import com.api.catalogo.filmes.app.usecases.IFindSimilarMovies;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.domain.models.keyword.Keywords;
 import com.api.catalogo.filmes.domain.models.movie.MovieDTO;
@@ -23,10 +24,12 @@ import java.util.Objects;
 @RequestMapping("/movies/tmdb")
 public class FindByMovieIDController {
 
-    private final MoviesTMDBService response;
+    private final IFindMovieResources findMovieResources;
+    private final IFindSimilarMovies findSimilarMovies;
 
-    public FindByMovieIDController(MoviesTMDBService response) {
-        this.response = response;
+    public FindByMovieIDController(IFindMovieResources findMovieResources, IFindSimilarMovies findSimilarMovies) {
+        this.findMovieResources = findMovieResources;
+        this.findSimilarMovies = findSimilarMovies;
     }
 
     @GetMapping("keyword")
@@ -41,7 +44,7 @@ public class FindByMovieIDController {
     public ResponseEntity<?> searchKeywords(
             @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
             @RequestParam(value = "movie") int movie){
-        Keywords keywords = response.searchKeywordsFilm(movie);
+        Keywords keywords = findMovieResources.searchKeywords(movie);
         if(Objects.isNull(keywords)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -64,7 +67,7 @@ public class FindByMovieIDController {
             @RequestParam(value = "page") int page,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
             @RequestParam(value = "language") Language language){
-        PaginationDTO<MovieDTO> response = this.response.listSimilarMovies(movie, page, language);
+        PaginationDTO<MovieDTO> response = this.findSimilarMovies.listSimilarMovies(movie, page, language);
         if(Objects.isNull(response.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -85,7 +88,7 @@ public class FindByMovieIDController {
             @RequestParam(value = "movie") int movie,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
             @RequestParam(value = "page") int page){
-        PaginationDTO<ReviewDTO> response = this.response.reviewsMovie(movie, page);
+        PaginationDTO<ReviewDTO> response = this.findMovieResources.searchReviews(movie, page);
         if(Objects.isNull(response.getResultados())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -107,7 +110,7 @@ public class FindByMovieIDController {
             @RequestParam(value = "movie") int movie,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
             @RequestParam(value = "language") Language language){
-        Video response = this.response.videosOfMovie(movie, language);
+        Video response = this.findMovieResources.searchTrailers(movie, language);
         if(Objects.isNull(response)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
