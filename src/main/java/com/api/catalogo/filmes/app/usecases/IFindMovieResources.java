@@ -1,10 +1,10 @@
 package com.api.catalogo.filmes.app.usecases;
 
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
-import com.api.catalogo.filmes.domain.models.keyword.Keywords;
-import com.api.catalogo.filmes.domain.models.pagination.PaginationDTO;
-import com.api.catalogo.filmes.domain.models.review.ReviewDTO;
-import com.api.catalogo.filmes.domain.models.video.Video;
+import com.api.catalogo.filmes.domain.keyword.Keywords;
+import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.review.ReviewDTO;
+import com.api.catalogo.filmes.domain.video.Video;
 
 public interface IFindMovieResources {
 

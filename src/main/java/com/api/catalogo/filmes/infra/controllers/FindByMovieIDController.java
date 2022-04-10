@@ -3,11 +3,11 @@ package com.api.catalogo.filmes.infra.controllers;
 import com.api.catalogo.filmes.app.usecases.IFindMovieResources;
 import com.api.catalogo.filmes.app.usecases.IFindSimilarMovies;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
-import com.api.catalogo.filmes.domain.models.keyword.Keywords;
-import com.api.catalogo.filmes.domain.models.movie.MovieDTO;
-import com.api.catalogo.filmes.domain.models.pagination.PaginationDTO;
-import com.api.catalogo.filmes.domain.models.review.ReviewDTO;
-import com.api.catalogo.filmes.domain.models.video.Video;
+import com.api.catalogo.filmes.domain.keyword.Keywords;
+import com.api.catalogo.filmes.domain.movie.MovieDTO;
+import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.review.ReviewDTO;
+import com.api.catalogo.filmes.domain.video.Video;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +68,7 @@ public class FindByMovieIDController {
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
             @RequestParam(value = "language") Language language){
         PaginationDTO<MovieDTO> response = this.findSimilarMovies.listSimilarMovies(movie, page, language);
-        if(Objects.isNull(response.getResultados())){
+        if(Objects.isNull(response.getResults())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -89,7 +89,7 @@ public class FindByMovieIDController {
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
             @RequestParam(value = "page") int page){
         PaginationDTO<ReviewDTO> response = this.findMovieResources.searchReviews(movie, page);
-        if(Objects.isNull(response.getResultados())){
+        if(Objects.isNull(response.getResults())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

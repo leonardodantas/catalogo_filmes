@@ -1,4 +1,4 @@
-package com.api.catalogo.filmes.domain.models.video;
+package com.api.catalogo.filmes.domain.video;
 
 import lombok.Getter;
 

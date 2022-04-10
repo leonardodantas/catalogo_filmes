@@ -5,10 +5,10 @@ import com.api.catalogo.filmes.app.utils.constantes.ServerConstante;
 import com.api.catalogo.filmes.app.utils.exception.TreatmentHttpStatusException;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.app.utils.tmdb.UrlTMDBFactory;
-import com.api.catalogo.filmes.domain.models.keyword.Keywords;
-import com.api.catalogo.filmes.domain.models.pagination.PaginationDTO;
-import com.api.catalogo.filmes.domain.models.review.ReviewDTO;
-import com.api.catalogo.filmes.domain.models.video.Video;
+import com.api.catalogo.filmes.domain.keyword.Keywords;
+import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.review.ReviewDTO;
+import com.api.catalogo.filmes.domain.video.Video;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -66,7 +66,7 @@ public class FindMovieResources implements IFindMovieResources {
     public PaginationDTO<ReviewDTO> searchReviews(int movie, int page) {
         String url = urlTMDBFactory.createURLForReviewMovie(movie, page);
         ResponseEntity<PaginationDTO<ReviewDTO>> moviesResponse = reviewsMovieTMDB(url);
-        if (moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResultados())) {
+        if (moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResults())) {
             return moviesResponse.getBody();
         }
         return new PaginationDTO();

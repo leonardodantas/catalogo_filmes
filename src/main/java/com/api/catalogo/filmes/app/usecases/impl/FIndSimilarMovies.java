@@ -5,8 +5,8 @@ import com.api.catalogo.filmes.app.utils.constantes.ServerConstante;
 import com.api.catalogo.filmes.app.utils.exception.TreatmentHttpStatusException;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.app.utils.tmdb.UrlTMDBFactory;
-import com.api.catalogo.filmes.domain.models.movie.MovieDTO;
-import com.api.catalogo.filmes.domain.models.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.movie.MovieDTO;
+import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -42,7 +42,7 @@ public class FIndSimilarMovies implements IFindSimilarMovies {
     public PaginationDTO<MovieDTO> listSimilarMovies(int movie, int page, Language language) {
         String url = urlTMDBFactory.createURLForListSimilarMovies(movie, page, language);
         ResponseEntity<PaginationDTO<MovieDTO>> moviesResponse = listSimilarMoviesTMDB(url);
-        if (moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResultados())) {
+        if (moviesResponse.getStatusCode().equals(HttpStatus.OK) && !Objects.isNull(moviesResponse.getBody().getResults())) {
             return createURLCompleteMovie(moviesResponse);
         }
         return new PaginationDTO();
@@ -65,10 +65,10 @@ public class FIndSimilarMovies implements IFindSimilarMovies {
     private PaginationDTO<MovieDTO> createURLCompleteMovie(ResponseEntity<PaginationDTO<MovieDTO>> movies) {
         PaginationDTO<MovieDTO> moviePageDTO = movies.getBody();
         moviePageDTO
-                .getResultados()
+                .getResults()
                 .forEach(result -> {
-                    result.setCaminhoDaImagemDeFundo(urlImageTMDB + result.getCaminhoDaImagemDeFundo());
-                    result.setCaminhoDoPoster(urlImageTMDB + result.getCaminhoDoPoster());
+                    result.setBackdrop_path(urlImageTMDB + result.getBackdrop_path());
+                    result.setPoster_path(urlImageTMDB + result.getPoster_path());
                 });
         return moviePageDTO;
     }

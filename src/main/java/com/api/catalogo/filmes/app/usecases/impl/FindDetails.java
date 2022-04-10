@@ -5,7 +5,7 @@ import com.api.catalogo.filmes.app.utils.constantes.ServerConstante;
 import com.api.catalogo.filmes.app.utils.exception.TreatmentHttpStatusException;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.app.utils.tmdb.UrlTMDBFactory;
-import com.api.catalogo.filmes.domain.models.details.MovieDetailDTO;
+import com.api.catalogo.filmes.domain.details.MovieDetailDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +59,9 @@ public class FindDetails implements IFindDetails {
 
     private MovieDetailDTO createURLCompleteMovieDetail(ResponseEntity<MovieDetailDTO> movieDetaiResponse) {
         MovieDetailDTO movieDetailDTO = movieDetaiResponse.getBody();
-        movieDetailDTO.setCaminhoDoPoster(urlImageTMDB + movieDetailDTO.getCaminhoDoPoster());
-        movieDetailDTO.setCaminhoDaImagem(urlImageTMDB + movieDetailDTO.getCaminhoDaImagem());
-        movieDetailDTO.getCidadesDeProducoes().forEach(cidade -> cidade.setCaminhoDoLogo(urlImageTMDB + cidade.getCaminhoDoLogo()));
+        movieDetailDTO.setPoster_path(urlImageTMDB + movieDetailDTO.getPoster_path());
+        movieDetailDTO.setBackdrop_path(urlImageTMDB + movieDetailDTO.getBackdrop_path());
+        movieDetailDTO.getProduction_companies().forEach(cidade -> cidade.setLogo_path(urlImageTMDB + cidade.getLogo_path()));
         return movieDetailDTO;
     }
 }

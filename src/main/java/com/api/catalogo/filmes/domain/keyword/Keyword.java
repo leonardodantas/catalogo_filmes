@@ -1,4 +1,4 @@
-package com.api.catalogo.filmes.domain.models.keyword;
+package com.api.catalogo.filmes.domain.keyword;
 
 import lombok.Getter;
 

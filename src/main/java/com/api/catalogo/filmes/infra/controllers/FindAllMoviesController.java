@@ -4,8 +4,8 @@ import com.api.catalogo.filmes.app.usecases.IFindAll;
 import com.api.catalogo.filmes.app.utils.exception.ErrorResponse;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
 import com.api.catalogo.filmes.app.utils.tmdb.RequestMovie;
-import com.api.catalogo.filmes.domain.models.movie.MovieDTO;
-import com.api.catalogo.filmes.domain.models.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.movie.MovieDTO;
+import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class FindAllMoviesController {
             @RequestParam(value = "language") Language language
     ){
         PaginationDTO<MovieDTO> response = findAll.execute(request, page, language);
-        if(Objects.isNull(response.getResultados())){
+        if(Objects.isNull(response.getResults())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

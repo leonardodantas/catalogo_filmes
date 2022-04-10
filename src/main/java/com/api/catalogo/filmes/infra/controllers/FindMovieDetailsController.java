@@ -2,7 +2,7 @@ package com.api.catalogo.filmes.infra.controllers;
 
 import com.api.catalogo.filmes.app.usecases.IFindDetails;
 import com.api.catalogo.filmes.app.utils.tmdb.Language;
-import com.api.catalogo.filmes.domain.models.details.MovieDetailDTO;
+import com.api.catalogo.filmes.domain.details.MovieDetailDTO;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
