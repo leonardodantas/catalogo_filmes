@@ -8,11 +8,10 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 @Configuration
-public class RestTemplateConfig {
+public class Rest {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-
+    public RestTemplate restTemplate(final RestTemplateBuilder builder) {
         return builder
                 .setConnectTimeout(Duration.ofMillis(3000))
                 .setReadTimeout(Duration.ofMillis(3000))
