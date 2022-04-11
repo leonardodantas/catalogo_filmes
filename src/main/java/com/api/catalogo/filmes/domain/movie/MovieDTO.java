@@ -9,6 +9,8 @@ import java.util.List;
 @Getter
 public class MovieDTO implements IPagination {
 
+    private final String URL_BASE = "https://www.themoviedb.org/t/p/w220_and_h330_face";
+
     private int id;
     private boolean adult;
     @Setter
@@ -25,5 +27,13 @@ public class MovieDTO implements IPagination {
     private double vote_average;
     private int vote_count;
     private boolean video;
+
+    public String getPoster_path(){
+        return URL_BASE.concat(this.poster_path);
+    }
+
+    public String getBackdrop_path(){
+        return URL_BASE.concat(this.backdrop_path);
+    }
 
 }
