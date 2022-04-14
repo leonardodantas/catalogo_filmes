@@ -1,7 +1,7 @@
 package com.api.catalogo.filmes.app.rest;
 
-import com.api.catalogo.filmes.domain.details.MovieDetailDTO;
+import com.api.catalogo.filmes.domain.details.MovieDetail;
 
 public interface IFindDetailsRest {
-    MovieDetailDTO searchDetailsTMDB(String url);
+    MovieDetail searchDetailsTMDB(String url);
 }

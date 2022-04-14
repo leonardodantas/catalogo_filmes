@@ -1,8 +1,8 @@
 package com.api.catalogo.filmes.app.rest;
 
-import com.api.catalogo.filmes.domain.movie.MovieDTO;
-import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
+import com.api.catalogo.filmes.domain.movie.Movie;
+import com.api.catalogo.filmes.domain.pagination.Page;
 
 public interface IFindAllMoviesRest {
-    PaginationDTO<MovieDTO> searchAllMoviesByCategoryTMDB(String url);
+    Page<Movie> searchAllMoviesByCategoryTMDB(String url);
 }

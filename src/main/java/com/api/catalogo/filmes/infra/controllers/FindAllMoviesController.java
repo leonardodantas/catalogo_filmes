@@ -1,21 +1,16 @@
 package com.api.catalogo.filmes.infra.controllers;
 
 import com.api.catalogo.filmes.app.usecases.IFindAll;
-import com.api.catalogo.filmes.app.utils.exception.ErrorResponse;
-import com.api.catalogo.filmes.app.utils.tmdb.Language;
-import com.api.catalogo.filmes.app.utils.tmdb.RequestMovie;
-import com.api.catalogo.filmes.domain.movie.MovieDTO;
-import com.api.catalogo.filmes.domain.pagination.PaginationDTO;
+import com.api.catalogo.filmes.infra.exception.ErrorResponse;
+import com.api.catalogo.filmes.infra.controllers.request.LanguageMovieRequest;
+import com.api.catalogo.filmes.infra.controllers.request.TypeMovieRequest;
+import com.api.catalogo.filmes.infra.controllers.response.MovieResponse;
+import com.api.catalogo.filmes.infra.controllers.response.PageResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.HttpURLConnection;
-import java.util.Objects;
 
 @Api(tags = "API - TMDB")
 @RestController
@@ -24,30 +19,29 @@ public class FindAllMoviesController {
 
     private final IFindAll findAll;
 
-    public FindAllMoviesController(IFindAll findAll) {
+    public FindAllMoviesController(final IFindAll findAll) {
         this.findAll = findAll;
     }
 
     @GetMapping
     @ApiOperation(tags = "API - TMDB", value = "Utilizada as informação inseridas como RequestMovie e Page para acessar a API do TMDB e recuperar uma lista de filmes")
     @ApiResponses(value = {
-            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PaginationDTO.class),
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Returns", response = PageResponse.class),
             @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = "Unauthorized"),
             @ApiResponse(code = HttpURLConnection.HTTP_NO_CONTENT, message = "Pagina deve ser igual ou menor que 500", response = ErrorResponse.class),
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
     })
-    public ResponseEntity<?> execute(
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<MovieResponse> execute(
             @ApiParam(required = true, value = "Tipo do Filme a ser enviado", name = "request")
-            @RequestParam(value = "request") RequestMovie request,
+            @RequestParam(value = "request") final TypeMovieRequest request,
             @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
-            @RequestParam(value = "page") int page,
+            @RequestParam(value = "page") final int page,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
-            @RequestParam(value = "language") Language language
+            @RequestParam(value = "language") final LanguageMovieRequest language
     ){
-        PaginationDTO<MovieDTO> response = findAll.execute(request, page, language);
-        if(Objects.isNull(response.getResults())){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        final var response = findAll.execute(request, language, page);
+        final var movies = response.getResults().stream().map(MovieResponse::from).toList();
+        return new PageResponse<>(page, movies, response.getTotal_pages(), response.getTotal_results());
     }
 }

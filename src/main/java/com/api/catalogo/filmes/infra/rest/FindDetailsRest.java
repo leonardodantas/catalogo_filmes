@@ -1,11 +1,10 @@
 package com.api.catalogo.filmes.infra.rest;
 
 import com.api.catalogo.filmes.app.rest.IFindDetailsRest;
-import com.api.catalogo.filmes.app.utils.constantes.ServerConstante;
-import com.api.catalogo.filmes.app.utils.exception.TreatmentHttpStatusException;
-import com.api.catalogo.filmes.domain.details.MovieDetailDTO;
+import com.api.catalogo.filmes.domain.details.MovieDetail;
+import com.api.catalogo.filmes.infra.rest.converters.MovieDetailConverter;
+import com.api.catalogo.filmes.infra.rest.jsons.MovieDetailRest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -15,22 +14,18 @@ import org.springframework.web.server.ResponseStatusException;
 public class FindDetailsRest implements IFindDetailsRest {
 
     private final RestTemplate restTemplate;
-    private final TreatmentHttpStatusException treatmentHttpStatus;
 
-    public FindDetailsRest(final RestTemplate restTemplate, final TreatmentHttpStatusException treatmentHttpStatus) {
+    public FindDetailsRest(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.treatmentHttpStatus = treatmentHttpStatus;
     }
 
     @Override
-    public MovieDetailDTO searchDetailsTMDB(final String url) {
-        ResponseEntity<MovieDetailDTO> detailsMovie;
+    public MovieDetail searchDetailsTMDB(final String url) {
         try {
-            detailsMovie = restTemplate.getForEntity(url, MovieDetailDTO.class);
-        } catch (HttpClientErrorException error) {
-            treatmentHttpStatus.handlerHttpStatusException(error);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ServerConstante.SERVER_BAD_REQUEST);
+            final var response = restTemplate.getForEntity(url, MovieDetailRest.class).getBody();
+            return MovieDetailConverter.convert(response);
+        } catch (final HttpClientErrorException error) {
+            throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);
         }
-        return detailsMovie.getBody();
     }
 }
