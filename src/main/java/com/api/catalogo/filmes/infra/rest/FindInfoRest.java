@@ -31,7 +31,7 @@ public class FindInfoRest implements IFindInfoRest {
     private final ExceptionHandling exceptionHandling;
 
 
-    public FindInfoRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
+    public FindInfoRest(final RestTemplate restTemplate, final ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
         this.exceptionHandling = exceptionHandling;
     }

@@ -19,7 +19,7 @@ public class FindDetailsRest implements IFindDetailsRest {
     private final RestTemplate restTemplate;
     private final ExceptionHandling exceptionHandling;
 
-    public FindDetailsRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
+    public FindDetailsRest(final RestTemplate restTemplate, final ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
         this.exceptionHandling = exceptionHandling;
     }

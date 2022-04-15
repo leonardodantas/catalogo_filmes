@@ -6,7 +6,6 @@ import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
 import com.api.catalogo.filmes.infra.exception.ExceptionHandling;
 import com.api.catalogo.filmes.infra.rest.converters.PageMovieConverter;
-import com.api.catalogo.filmes.infra.rest.jsons.ErrorApi;
 import com.api.catalogo.filmes.infra.rest.jsons.MovieRest;
 import com.api.catalogo.filmes.infra.rest.jsons.PageRest;
 import com.api.catalogo.filmes.infra.rest.url.Resource;
@@ -25,7 +24,7 @@ public class FindSimilarRest implements IFindSimilarRest {
     private final RestTemplate restTemplate;
     private final ExceptionHandling exceptionHandling;
 
-    public FindSimilarRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
+    public FindSimilarRest(final RestTemplate restTemplate, final ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
         this.exceptionHandling = exceptionHandling;
     }

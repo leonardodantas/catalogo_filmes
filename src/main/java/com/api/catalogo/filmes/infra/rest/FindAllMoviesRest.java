@@ -24,7 +24,7 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
 
     private final ExceptionHandling exceptionHandling;
 
-    public FindAllMoviesRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
+    public FindAllMoviesRest(final RestTemplate restTemplate, final ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
         this.exceptionHandling = exceptionHandling;
     }
