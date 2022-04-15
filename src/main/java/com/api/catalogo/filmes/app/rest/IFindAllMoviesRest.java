@@ -6,5 +6,5 @@ import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
 
 public interface IFindAllMoviesRest {
-    Page<Movie> searchAllMoviesByCategoryTMDB(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page);
+    Page<Movie> searchAllMoviesByCategoryTMDB(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page, final String apiKey);
 }

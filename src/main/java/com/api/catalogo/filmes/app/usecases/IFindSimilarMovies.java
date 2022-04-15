@@ -7,6 +7,6 @@ import com.api.catalogo.filmes.domain.pagination.Page;
 
 public interface IFindSimilarMovies {
 
-    Page<Movie> searchSimilarMovies(int movie, int page, ILanguageMovie language);
+    Page<Movie> searchSimilarMovies(final int movie, final int page, final ILanguageMovie language, final String apiKey);
 
 }

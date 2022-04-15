@@ -5,6 +5,6 @@ import com.api.catalogo.filmes.domain.details.MovieDetail;
 
 public interface IFindDetails {
 
-    MovieDetail execute(int movieId, ILanguageMovie language);
+    MovieDetail execute(final int movieId, final ILanguageMovie language, final String apiKey);
 
 }

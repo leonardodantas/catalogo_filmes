@@ -27,8 +27,8 @@ public class FindSimilarRest implements IFindSimilarRest {
     }
 
     @Override
-    public Page<Movie> searchSimilarMoviesTMDB(final int movieId, final int page, final ILanguageMovie language) {
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+    public Page<Movie> searchSimilarMoviesTMDB(final int movieId, final int page, final ILanguageMovie language, final String apiKey) {
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .movieId(movieId)
                 .resource(Resource.SIMILAR)
                 .page(page)

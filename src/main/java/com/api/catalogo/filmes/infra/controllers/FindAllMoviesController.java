@@ -35,12 +35,13 @@ public class FindAllMoviesController {
     public PageResponse<MovieResponse> execute(
             @ApiParam(required = true, value = "Tipo do Filme a ser enviado", name = "request")
             @RequestParam(value = "request") final TypeMovieRequest request,
-            @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
+            @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page", example = "1")
             @RequestParam(value = "page") final int page,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
-            @RequestParam(value = "language") final LanguageMovieRequest language
-    ){
-        final var response = findAll.execute(request, language, page);
+            @RequestParam(value = "language") final LanguageMovieRequest language,
+            @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
+            @RequestHeader(value = "apiKey") final String apiKey) {
+        final var response = findAll.execute(request, language, page, apiKey);
         final var movies = response.getResults().stream().map(MovieResponse::from).toList();
         return new PageResponse<>(page, movies, response.getTotal_pages(), response.getTotal_results());
     }

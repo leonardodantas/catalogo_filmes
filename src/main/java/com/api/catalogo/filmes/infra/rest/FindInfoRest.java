@@ -33,8 +33,8 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Keywords searchKeywordsTMDB(final int movieId) {
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+    public Keywords searchKeywordsTMDB(final int movieId, final String apiKey) {
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .movieId(movieId)
                 .resource(Resource.KEYWORDS)
                 .builder();
@@ -47,10 +47,11 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Page<Review> searchReviewsTMDB(final int movieId, final int page) {
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+    public Page<Review> searchReviewsTMDB(final int movieId, final int page, final String apiKey) {
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .movieId(movieId)
                 .resource(Resource.REVIEWS)
+                .page(page)
                 .builder();
 
         try {
@@ -64,9 +65,10 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Video searchTrailersTMDB(final int movieId, final ILanguageMovie language) {
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+    public Video searchTrailersTMDB(final int movieId, final ILanguageMovie language, final String apiKey) {
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .movieId(movieId)
+                .language(language)
                 .resource(Resource.VIDEOS)
                 .builder();
         try {

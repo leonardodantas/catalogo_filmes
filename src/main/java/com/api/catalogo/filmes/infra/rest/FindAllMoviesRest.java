@@ -27,13 +27,14 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
     }
 
     @Override
-    public Page<Movie> searchAllMoviesByCategoryTMDB(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page) {
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+    public Page<Movie> searchAllMoviesByCategoryTMDB(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page, final String apiKey) {
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .typeMovie(typeMovie)
                 .page(page)
                 .language(languageMovie).builder();
         try {
-            final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {} ;
+            final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {
+            };
             final var response = restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef).getBody();
             return PageMovieConverter.convert(response);
         } catch (final HttpClientErrorException error) {

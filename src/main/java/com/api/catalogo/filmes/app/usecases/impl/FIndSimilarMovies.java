@@ -17,8 +17,8 @@ public class FIndSimilarMovies implements IFindSimilarMovies {
     }
 
     @Override
-    public Page<Movie> searchSimilarMovies(final int movieId, final int page, final ILanguageMovie language) {
-        return findSimilarRest.searchSimilarMoviesTMDB(movieId, page, language);
+    public Page<Movie> searchSimilarMovies(final int movieId, final int page, final ILanguageMovie language, final String apiKey) {
+        return findSimilarRest.searchSimilarMoviesTMDB(movieId, page, language, apiKey);
     }
 
 }

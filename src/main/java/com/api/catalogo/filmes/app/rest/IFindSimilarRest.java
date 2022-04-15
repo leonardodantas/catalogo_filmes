@@ -5,5 +5,5 @@ import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
 
 public interface IFindSimilarRest {
-    Page<Movie> searchSimilarMoviesTMDB(final int movieId, final int page, final ILanguageMovie language);
+    Page<Movie> searchSimilarMoviesTMDB(final int movieId, final int page, final ILanguageMovie language, final String apiKey);
 }

@@ -34,11 +34,13 @@ public class FindMovieDetailsController {
     })
     @ResponseStatus(HttpStatus.OK)
     public MovieDetailsResponse execute(
-            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie", example = "460465")
             @RequestParam(value = "movie") final int movieId,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
-            @RequestParam(value = "language") final LanguageMovieRequest language){
-        final var response = findDetails.execute(movieId, language);
+            @RequestParam(value = "language") final LanguageMovieRequest language,
+            @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
+            @RequestHeader(value = "apiKey") final String apiKey) {
+        final var response = findDetails.execute(movieId, language, apiKey);
         return MovieDetailsResponse.from(response);
     }
 

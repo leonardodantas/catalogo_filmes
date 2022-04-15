@@ -16,8 +16,8 @@ public class FindDetails implements IFindDetails {
     }
 
     @Override
-    public MovieDetail execute(final int movieId, final ILanguageMovie language) {
-        return findDetailsRest.searchDetailsTMDB(movieId,language);
+    public MovieDetail execute(final int movieId, final ILanguageMovie language, final String apiKey) {
+        return findDetailsRest.searchDetailsTMDB(movieId, language, apiKey);
     }
 
 }

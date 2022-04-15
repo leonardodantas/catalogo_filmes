@@ -8,7 +8,7 @@ import com.api.catalogo.filmes.domain.review.Review;
 import com.api.catalogo.filmes.domain.video.Video;
 
 public interface IFindMovieInfo {
-    Keywords searchKeywords(int movieId);
-    Page<Review> searchReviews(int movieId, int page);
-    Video searchTrailers(int movieId, ILanguageMovie language);
+    Keywords searchKeywords(final int movieId, final String apiKey);
+    Page<Review> searchReviews(final int movieId, final int page, final String apiKey);
+    Video searchTrailers(final int movieId, final ILanguageMovie language, final String apiKey);
 }

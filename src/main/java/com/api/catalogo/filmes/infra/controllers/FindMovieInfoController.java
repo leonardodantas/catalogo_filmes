@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 public class FindMovieInfoController {
 
     private final IFindMovieInfo findMovieInfo;
+
     public FindMovieInfoController(final IFindMovieInfo findMovieInfo) {
         this.findMovieInfo = findMovieInfo;
     }
@@ -34,9 +35,11 @@ public class FindMovieInfoController {
     })
     @ResponseStatus(HttpStatus.OK)
     public KeywordsResponse searchKeywords(
-            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
-            @RequestParam(value = "movie") final int movie){
-        final var response = findMovieInfo.searchKeywords(movie);
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie", example = "460465")
+            @RequestParam(value = "movie") final int movie,
+            @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
+            @RequestHeader(value = "apiKey") final String apiKey) {
+        final var response = findMovieInfo.searchKeywords(movie, apiKey);
         return KeywordsResponse.from(response);
     }
 
@@ -50,11 +53,13 @@ public class FindMovieInfoController {
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
     })
     public PageResponse<ReviewResponse> searchReviews(
-            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie", example = "460465")
             @RequestParam(value = "movie") final int movieId,
-            @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page",  example = "1")
-            @RequestParam(value = "page") final int page){
-        final var response = this.findMovieInfo.searchReviews(movieId, page);
+            @ApiParam(required = true, value = "Pagina que será solicitada ao servidor do TMDB", name = "page", example = "1")
+            @RequestParam(value = "page") final int page,
+            @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
+            @RequestHeader(value = "apiKey") final String apiKey) {
+        final var response = this.findMovieInfo.searchReviews(movieId, page, apiKey);
         final var reviews = response.getResults().stream().map(ReviewResponse::from).toList();
         return new PageResponse<>(page, reviews, response.getTotal_pages(), response.getTotal_results());
     }
@@ -69,11 +74,13 @@ public class FindMovieInfoController {
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Servidor fora do ar")
     })
     public VideoResponse searchTrailers(
-            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie",  example = "460465")
+            @ApiParam(required = true, value = "ID do Filmes que será solicitado ao servidor do TMDB", name = "movie", example = "460465")
             @RequestParam(value = "movie") final int movie,
             @ApiParam(required = true, value = "Idioma das requisições", name = "language")
-            @RequestParam(value = "language") final LanguageMovieRequest language){
-        final var response = this.findMovieInfo.searchTrailers(movie, language);
+            @RequestParam(value = "language") final LanguageMovieRequest language,
+            @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
+            @RequestHeader(value = "apiKey") final String apiKey) {
+        final var response = this.findMovieInfo.searchTrailers(movie, language, apiKey);
         return VideoResponse.from(response);
     }
 

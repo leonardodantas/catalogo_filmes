@@ -8,7 +8,7 @@ import com.api.catalogo.filmes.domain.video.Video;
 
 public interface IFindInfoRest {
 
-    Keywords searchKeywordsTMDB(final int movieId);
-    Page<Review> searchReviewsTMDB(final int movieId, final int page);
-    Video searchTrailersTMDB(final int movieId, final ILanguageMovie language);
+    Keywords searchKeywordsTMDB(final int movieId, final String apiKey);
+    Page<Review> searchReviewsTMDB(final int movieId, final int page, final String apiKey);
+    Video searchTrailersTMDB(final int movieId, final ILanguageMovie language, final String apiKey);
 }

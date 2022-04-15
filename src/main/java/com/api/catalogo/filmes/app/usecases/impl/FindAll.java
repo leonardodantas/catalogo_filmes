@@ -18,7 +18,7 @@ public class FindAll implements IFindAll {
     }
 
     @Override
-    public Page<Movie> execute(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page) {
-        return findAllMoviesRest.searchAllMoviesByCategoryTMDB(typeMovie, languageMovie, page);
+    public Page<Movie> execute(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page, String apiKey) {
+        return findAllMoviesRest.searchAllMoviesByCategoryTMDB(typeMovie, languageMovie, page, apiKey);
     }
 }

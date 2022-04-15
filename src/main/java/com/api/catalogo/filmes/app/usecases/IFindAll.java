@@ -7,5 +7,5 @@ import com.api.catalogo.filmes.domain.pagination.Page;
 
 public interface IFindAll {
 
-    Page<Movie> execute(ITypeMovie requestMovie, ILanguageMovie language, int page);
+    Page<Movie> execute(ITypeMovie requestMovie, ILanguageMovie language, int page, String apiKey);
 }

@@ -22,9 +22,9 @@ public class FindDetailsRest implements IFindDetailsRest {
     }
 
     @Override
-    public MovieDetail searchDetailsTMDB(final int movieId, final ILanguageMovie language) {
+    public MovieDetail searchDetailsTMDB(final int movieId, final ILanguageMovie language, final String apiKey) {
 
-        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+        final var urlBuilder = new URLBuilder.Builder(apiKey)
                 .movieId(movieId)
                 .language(language)
                 .builder();
