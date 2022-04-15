@@ -4,6 +4,7 @@ import com.api.catalogo.filmes.app.models.IAllMovies;
 import com.api.catalogo.filmes.app.rest.IFindAllMoviesRest;
 import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
+import com.api.catalogo.filmes.infra.exception.ExceptionHandling;
 import com.api.catalogo.filmes.infra.rest.converters.PageMovieConverter;
 import com.api.catalogo.filmes.infra.rest.jsons.MovieRest;
 import com.api.catalogo.filmes.infra.rest.jsons.PageRest;
@@ -21,8 +22,11 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
 
     private final RestTemplate restTemplate;
 
-    public FindAllMoviesRest(final RestTemplate restTemplate) {
+    private final ExceptionHandling exceptionHandling;
+
+    public FindAllMoviesRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
+        this.exceptionHandling = exceptionHandling;
     }
 
     @Override
@@ -37,7 +41,8 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
             final var response = restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef).getBody();
             return PageMovieConverter.convert(response);
         } catch (final HttpClientErrorException error) {
-            throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getMessage(), error);
+            final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
+            throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.api.catalogo.filmes.infra.rest;
 import com.api.catalogo.filmes.app.models.ILanguageMovie;
 import com.api.catalogo.filmes.app.rest.IFindDetailsRest;
 import com.api.catalogo.filmes.domain.details.MovieDetail;
+import com.api.catalogo.filmes.infra.exception.ExceptionHandling;
 import com.api.catalogo.filmes.infra.rest.converters.MovieDetailConverter;
 import com.api.catalogo.filmes.infra.rest.jsons.MovieDetailRest;
 import com.api.catalogo.filmes.infra.rest.url.URLBuilder;
@@ -16,9 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class FindDetailsRest implements IFindDetailsRest {
 
     private final RestTemplate restTemplate;
+    private final ExceptionHandling exceptionHandling;
 
-    public FindDetailsRest(final RestTemplate restTemplate) {
+    public FindDetailsRest(final RestTemplate restTemplate, ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
+        this.exceptionHandling = exceptionHandling;
     }
 
     @Override
@@ -33,7 +36,8 @@ public class FindDetailsRest implements IFindDetailsRest {
             final var response = restTemplate.getForEntity(urlBuilder.getValue(), MovieDetailRest.class).getBody();
             return MovieDetailConverter.convert(response);
         } catch (final HttpClientErrorException error) {
-            throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);
+            final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
+            throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);
         }
     }
 }

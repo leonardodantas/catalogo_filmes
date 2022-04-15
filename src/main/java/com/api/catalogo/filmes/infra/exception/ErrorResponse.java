@@ -11,6 +11,6 @@ public record ErrorResponse(
         LocalDateTime date
 ) {
     public static ErrorResponse from(final ResponseStatusException error) {
-        return new ErrorResponse(UUID.randomUUID().toString(), error.getMessage(), LocalDateTime.now());
+        return new ErrorResponse(UUID.randomUUID().toString(), error.getReason(), LocalDateTime.now());
     }
 }
