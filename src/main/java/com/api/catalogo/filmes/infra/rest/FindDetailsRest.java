@@ -30,7 +30,7 @@ public class FindDetailsRest implements IFindDetailsRest {
                 .builder();
 
         try {
-            final var response = restTemplate.getForEntity(urlBuilder.value(), MovieDetailRest.class).getBody();
+            final var response = restTemplate.getForEntity(urlBuilder.getValue(), MovieDetailRest.class).getBody();
             return MovieDetailConverter.convert(response);
         } catch (final HttpClientErrorException error) {
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);

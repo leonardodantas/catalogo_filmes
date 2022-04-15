@@ -34,7 +34,7 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
                 .language(languageMovie).builder();
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {} ;
-            final var response = restTemplate.exchange(urlBuilder.value(), HttpMethod.GET, null, typeRef).getBody();
+            final var response = restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef).getBody();
             return PageMovieConverter.convert(response);
         } catch (final HttpClientErrorException error) {
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getMessage(), error);

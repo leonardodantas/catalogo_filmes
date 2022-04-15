@@ -5,7 +5,17 @@ import com.api.catalogo.filmes.app.models.ITypeMovie;
 
 import java.util.Objects;
 
-public record URLBuilder(String value) {
+public class URLBuilder {
+
+    private final String baseUrl;
+
+    private URLBuilder(String baseUrl){
+        this.baseUrl = baseUrl;
+    }
+
+    public String getValue(){
+        return this.baseUrl;
+    }
 
     public static class Builder {
         private static final String URL_API = "https://api.themoviedb.org/3/movie/";
