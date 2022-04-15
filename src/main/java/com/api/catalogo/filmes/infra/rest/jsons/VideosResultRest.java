@@ -1,4 +1,4 @@
-package com.api.catalogo.filmes.domain.video;
+package com.api.catalogo.filmes.infra.rest.jsons;
 
 
 public record VideosResultRest(

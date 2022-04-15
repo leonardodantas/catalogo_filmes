@@ -1,7 +1,7 @@
 package com.api.catalogo.filmes.infra.rest.converters;
 
 import com.api.catalogo.filmes.domain.video.VideosResult;
-import com.api.catalogo.filmes.domain.video.VideosResultRest;
+import com.api.catalogo.filmes.infra.rest.jsons.VideosResultRest;
 
 public class VideoResultsConverter {
 

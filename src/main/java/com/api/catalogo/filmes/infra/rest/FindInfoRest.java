@@ -1,5 +1,7 @@
 package com.api.catalogo.filmes.infra.rest;
 
+import com.api.catalogo.filmes.app.models.ILanguageMovie;
+import com.api.catalogo.filmes.infra.rest.url.Resource;
 import com.api.catalogo.filmes.app.rest.IFindInfoRest;
 import com.api.catalogo.filmes.domain.keyword.Keywords;
 import com.api.catalogo.filmes.domain.pagination.Page;
@@ -12,10 +14,10 @@ import com.api.catalogo.filmes.infra.rest.jsons.KeywordsRest;
 import com.api.catalogo.filmes.infra.rest.jsons.PageRest;
 import com.api.catalogo.filmes.infra.rest.jsons.ReviewRest;
 import com.api.catalogo.filmes.infra.rest.jsons.VideoRest;
+import com.api.catalogo.filmes.infra.rest.url.URLBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -30,9 +32,13 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Keywords searchKeywordsTMDB(final String url) {
+    public Keywords searchKeywordsTMDB(final int movieId) {
+        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+                .movieId(movieId)
+                .resource(Resource.KEYWORDS)
+                .builder();
         try {
-            final var response = restTemplate.getForEntity(url, KeywordsRest.class).getBody();
+            final var response = restTemplate.getForEntity(urlBuilder.value(), KeywordsRest.class).getBody();
             return KeywordsConverter.convert(response);
         } catch (final HttpClientErrorException error) {
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);
@@ -40,11 +46,16 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Page<Review> searchReviewsTMDB(final String url) {
+    public Page<Review> searchReviewsTMDB(final int movieId, final int page) {
+        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+                .movieId(movieId)
+                .resource(Resource.REVIEWS)
+                .builder();
+
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<ReviewRest>>() {
             };
-            final var response = restTemplate.exchange(url, HttpMethod.GET, null, typeRef).getBody();
+            final var response = restTemplate.exchange(urlBuilder.value(), HttpMethod.GET, null, typeRef).getBody();
             return PageReviewConverter.convert(response);
         } catch (final HttpClientErrorException error) {
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);
@@ -52,9 +63,13 @@ public class FindInfoRest implements IFindInfoRest {
     }
 
     @Override
-    public Video searchTrailersTMDB(final String url) {
+    public Video searchTrailersTMDB(final int movieId, final ILanguageMovie language) {
+        final var urlBuilder = new URLBuilder.Builder("c769b56d9fbc89d33bd16385acf510ca")
+                .movieId(movieId)
+                .resource(Resource.VIDEOS)
+                .builder();
         try {
-            final var response = restTemplate.getForEntity(url, VideoRest.class).getBody();
+            final var response = restTemplate.getForEntity(urlBuilder.value(), VideoRest.class).getBody();
             return VideoConverter.convert(response);
         } catch (final HttpClientErrorException error) {
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), error.getResponseBodyAsString(), error);

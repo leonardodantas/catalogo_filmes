@@ -4,7 +4,7 @@ import com.api.catalogo.filmes.app.models.ILanguageMovie;
 
 public enum LanguageMovieRequest implements ILanguageMovie {
 
-    PT("&language=pt-BR"),EN("&language=en-EN"),ES("&language=es-ES");
+    PT("pt-BR"),EN("en-EN"),ES("es-ES");
 
     private final String language;
 
