@@ -2,6 +2,7 @@ package com.api.catalogo.filmes.infra.controllers;
 
 import com.api.catalogo.filmes.app.usecases.IFindSimilarMovies;
 import com.api.catalogo.filmes.infra.controllers.request.LanguageMovieRequest;
+import com.api.catalogo.filmes.infra.controllers.request.SimilarMovies;
 import com.api.catalogo.filmes.infra.controllers.response.MovieResponse;
 import com.api.catalogo.filmes.infra.controllers.response.PageResponse;
 import io.swagger.annotations.*;
@@ -38,7 +39,7 @@ public class FindSimilarMoviesController {
             @RequestParam(value = "language") final LanguageMovieRequest language,
             @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
             @RequestHeader(value = "apiKey") final String apiKey) {
-        final var response = this.findSimilarMovies.searchSimilarMovies(movieId, page, language, apiKey);
+        final var response = this.findSimilarMovies.searchSimilarMovies(SimilarMovies.of(movieId, page, language, apiKey));
         final var movies = response.getResults().stream().map(MovieResponse::from).toList();
         return new PageResponse<>(page, movies, response.getTotal_results(), response.getTotal_results());
     }

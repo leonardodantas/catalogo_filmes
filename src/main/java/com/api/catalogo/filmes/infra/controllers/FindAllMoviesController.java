@@ -1,11 +1,12 @@
 package com.api.catalogo.filmes.infra.controllers;
 
 import com.api.catalogo.filmes.app.usecases.IFindAll;
-import com.api.catalogo.filmes.infra.exception.ErrorResponse;
+import com.api.catalogo.filmes.infra.controllers.request.AllMovies;
 import com.api.catalogo.filmes.infra.controllers.request.LanguageMovieRequest;
 import com.api.catalogo.filmes.infra.controllers.request.TypeMovieRequest;
 import com.api.catalogo.filmes.infra.controllers.response.MovieResponse;
 import com.api.catalogo.filmes.infra.controllers.response.PageResponse;
+import com.api.catalogo.filmes.infra.exception.ErrorResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class FindAllMoviesController {
             @RequestParam(value = "language") final LanguageMovieRequest language,
             @ApiParam(required = true, value = "apiKey da TMDB", name = "apiKey")
             @RequestHeader(value = "apiKey") final String apiKey) {
-        final var response = findAll.execute(request, language, page, apiKey);
+        final var response = findAll.execute(AllMovies.of(request, language, page, apiKey));
         final var movies = response.getResults().stream().map(MovieResponse::from).toList();
         return new PageResponse<>(page, movies, response.getTotal_pages(), response.getTotal_results());
     }

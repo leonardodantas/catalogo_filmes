@@ -1,6 +1,6 @@
 package com.api.catalogo.filmes.infra.rest;
 
-import com.api.catalogo.filmes.app.models.ILanguageMovie;
+import com.api.catalogo.filmes.app.models.ISimilarMovies;
 import com.api.catalogo.filmes.app.rest.IFindSimilarRest;
 import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
@@ -27,12 +27,12 @@ public class FindSimilarRest implements IFindSimilarRest {
     }
 
     @Override
-    public Page<Movie> searchSimilarMoviesTMDB(final int movieId, final int page, final ILanguageMovie language, final String apiKey) {
-        final var urlBuilder = new URLBuilder.Builder(apiKey)
-                .movieId(movieId)
+    public Page<Movie> searchSimilarMoviesTMDB(final ISimilarMovies similarMovies) {
+        final var urlBuilder = new URLBuilder.Builder(similarMovies.getApiKey())
+                .movieId(similarMovies.getMovieId())
                 .resource(Resource.SIMILAR)
-                .page(page)
-                .language(language)
+                .page(similarMovies.getPage())
+                .language(similarMovies.getLanguage())
                 .builder();
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {

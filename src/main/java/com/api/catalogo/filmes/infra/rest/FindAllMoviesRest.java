@@ -1,7 +1,6 @@
 package com.api.catalogo.filmes.infra.rest;
 
-import com.api.catalogo.filmes.app.models.ILanguageMovie;
-import com.api.catalogo.filmes.app.models.ITypeMovie;
+import com.api.catalogo.filmes.app.models.IAllMovies;
 import com.api.catalogo.filmes.app.rest.IFindAllMoviesRest;
 import com.api.catalogo.filmes.domain.movie.Movie;
 import com.api.catalogo.filmes.domain.pagination.Page;
@@ -27,11 +26,11 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
     }
 
     @Override
-    public Page<Movie> searchAllMoviesByCategoryTMDB(final ITypeMovie typeMovie, final ILanguageMovie languageMovie, final int page, final String apiKey) {
-        final var urlBuilder = new URLBuilder.Builder(apiKey)
-                .typeMovie(typeMovie)
-                .page(page)
-                .language(languageMovie).builder();
+    public Page<Movie> searchAllMoviesByCategoryTMDB(final IAllMovies allMovies) {
+        final var urlBuilder = new URLBuilder.Builder(allMovies.getApiKey())
+                .typeMovie(allMovies.getTypeMovie())
+                .page(allMovies.getPage())
+                .language(allMovies.getLanguageMovie()).builder();
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {
             };
