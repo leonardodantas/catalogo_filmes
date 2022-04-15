@@ -12,10 +12,14 @@ import com.api.catalogo.filmes.infra.rest.url.URLBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class FindAllMoviesRest implements IFindAllMoviesRest {
@@ -38,8 +42,11 @@ public class FindAllMoviesRest implements IFindAllMoviesRest {
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<MovieRest>>() {
             };
-            final var response = restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef).getBody();
-            return PageMovieConverter.convert(response);
+            final var response = Optional.of(restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef));
+
+            return response.map(ResponseEntity::getBody).map(PageMovieConverter::convert)
+                    .orElseGet(() -> new Page<>(0, Collections.emptyList(), 0, 0));
+
         } catch (final HttpClientErrorException error) {
             final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);

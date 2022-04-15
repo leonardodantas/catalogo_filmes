@@ -19,17 +19,20 @@ import com.api.catalogo.filmes.infra.rest.url.URLBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class FindInfoRest implements IFindInfoRest {
 
     private final RestTemplate restTemplate;
     private final ExceptionHandling exceptionHandling;
-
 
     public FindInfoRest(final RestTemplate restTemplate, final ExceptionHandling exceptionHandling) {
         this.restTemplate = restTemplate;
@@ -43,8 +46,9 @@ public class FindInfoRest implements IFindInfoRest {
                 .resource(Resource.KEYWORDS)
                 .builder();
         try {
-            final var response = restTemplate.getForEntity(urlBuilder.getValue(), KeywordsRest.class).getBody();
-            return KeywordsConverter.convert(response);
+            final var response = Optional.of(restTemplate.getForEntity(urlBuilder.getValue(), KeywordsRest.class));
+            return response.map(ResponseEntity::getBody).map(KeywordsConverter::convert)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Keywords not found"));
         } catch (final HttpClientErrorException error) {
             final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);
@@ -62,8 +66,10 @@ public class FindInfoRest implements IFindInfoRest {
         try {
             final var typeRef = new ParameterizedTypeReference<PageRest<ReviewRest>>() {
             };
-            final var response = restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef).getBody();
-            return PageReviewConverter.convert(response);
+            final var response = Optional.of(restTemplate.exchange(urlBuilder.getValue(), HttpMethod.GET, null, typeRef));
+            return response.map(ResponseEntity::getBody).map(PageReviewConverter::convert)
+                    .orElseGet(() -> new Page<Review>(page, Collections.emptyList(), 0, 0));
+
         } catch (final HttpClientErrorException error) {
             final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);
@@ -78,8 +84,9 @@ public class FindInfoRest implements IFindInfoRest {
                 .resource(Resource.VIDEOS)
                 .builder();
         try {
-            final var response = restTemplate.getForEntity(urlBuilder.getValue(), VideoRest.class).getBody();
-            return VideoConverter.convert(response);
+            final var response = Optional.of(restTemplate.getForEntity(urlBuilder.getValue(), VideoRest.class));
+            return response.map(ResponseEntity::getBody).map(VideoConverter::convert)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trailers not found"));
         } catch (final HttpClientErrorException error) {
             final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);

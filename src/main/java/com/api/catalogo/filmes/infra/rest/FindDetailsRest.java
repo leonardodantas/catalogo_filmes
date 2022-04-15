@@ -8,10 +8,13 @@ import com.api.catalogo.filmes.infra.rest.converters.MovieDetailConverter;
 import com.api.catalogo.filmes.infra.rest.jsons.MovieDetailRest;
 import com.api.catalogo.filmes.infra.rest.url.URLBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Component
 public class FindDetailsRest implements IFindDetailsRest {
@@ -33,8 +36,11 @@ public class FindDetailsRest implements IFindDetailsRest {
                 .builder();
 
         try {
-            final var response = restTemplate.getForEntity(urlBuilder.getValue(), MovieDetailRest.class).getBody();
-            return MovieDetailConverter.convert(response);
+            final var response = Optional.of(restTemplate.getForEntity(urlBuilder.getValue(), MovieDetailRest.class));
+            return response.map(ResponseEntity::getBody)
+                    .map(MovieDetailConverter::convert)
+                    .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found")));
+
         } catch (final HttpClientErrorException error) {
             final var message = exceptionHandling.getMessage(error.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.valueOf(error.getRawStatusCode()), message);
