@@ -9,11 +9,11 @@ public class URLBuilder {
 
     private final String baseUrl;
 
-    private URLBuilder(String baseUrl){
+    private URLBuilder(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
-    public String getValue(){
+    public String getValue() {
         return this.baseUrl;
     }
 
@@ -64,14 +64,7 @@ public class URLBuilder {
             final var url = new StringBuilder();
             url.append(URL_API);
 
-            if (!Objects.isNull(typeRequest)) {
-                url.append(typeRequest.getType());
-            } else if (movieId != 0) {
-                url.append(movieId);
-                if (!Objects.isNull(resource)) {
-                    url.append("/").append(resource.getResource());
-                }
-            }
+            url.append(getMovieIdAndResource(url));
 
             url.append("?api_key=");
             url.append(apiKey);
@@ -85,6 +78,21 @@ public class URLBuilder {
             }
 
             return url.toString();
+        }
+
+        private String getMovieIdAndResource(StringBuilder url) {
+            if (!Objects.isNull(typeRequest)) {
+                return typeRequest.getType();
+            }
+            var movieAndResource = new StringBuilder();
+            if (movieId != 0) {
+                movieAndResource.append(movieId);
+                if (!Objects.isNull(resource)) {
+                    movieAndResource.append("/").append(resource.getResource());
+                }
+            }
+
+            return movieAndResource.toString();
         }
     }
 }
