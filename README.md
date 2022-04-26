@@ -77,7 +77,7 @@ https://github.com/leonardodantas/catalogo_filmes/tree/feature/refactor-project
 | `apiKey` | `Header` | **Obrigatório**. Key TMDB |
 | `movie` | `int` | **Obrigatório**. ID do filme |
 
-### Retorna as palavras chaves para o filme
+### Retorna os reviews do filme
 ```
   GET /catalogo/filmes/v1/movies/review
 ```
@@ -91,7 +91,7 @@ https://github.com/leonardodantas/catalogo_filmes/tree/feature/refactor-project
 ### Retorna uma página com os filmes semelhantes
 
 ```
-  GET /catalogo/filmes/v1/movies/tmbd
+  GET /catalogo/filmes/v1/movies/similar
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
@@ -103,7 +103,7 @@ https://github.com/leonardodantas/catalogo_filmes/tree/feature/refactor-project
 
 ### Retorna os trailers
 ```
-  GET /catalogo/filmes/v1/movies/review
+  GET /catalogo/filmes/v1/movies/videos
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
